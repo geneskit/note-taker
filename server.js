@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-const { notes } = require('./develop/db/db.json');
-const { title } = require('process');
+const { notesData } = require('./develop/db/db.json');
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -14,13 +14,24 @@ app.use(express.static("public"));
 app.use(express.json());
 
 // functions
-
+function filterById(id, noteCollection) {
+    const result = noteCollection.filter(notesData => notesData.id === id)[0];
+    return result;
+}
 
 //routes
 app.get('/', (req, res) => {
-    let listedNotes = notes;
-    res.json(listedNotes);
+    res.sendFile(path.join(__dirname, './develop/db/db.json'));
 });
+
+app.get('/api/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './develop/db/db.json'))
+});
+
+app.get('/api/notes/:id', (req, res) => {
+    const result = filterById(req.params.id, notesData);
+    res.json(result);
+})
 
 app.post("/createNote", function(req, res){
     const noteInput = {};
@@ -29,16 +40,20 @@ app.post("/createNote", function(req, res){
     noteInput.title = req.body.note-title;
     noteInput.body = req.body.note-textarea;
 
-    let notebook = JSON.parse(fs.readFileSync(notes));
-    notes.push(noteInput);
-    fs.writeFileSync(notes, json.stringify(noteInput));
-    
-    res.redirect('/');
+    let notebook = JSON.parse(fs.readFileSync(notesData));
+    notebook.push(noteInput);
+    fs.writeFileSync(notebook, json.stringify(noteInput));
+
+    res.json(notebook);
 })
 
 app.post("/deleteNote/:id", (req, res) => {
-    const trashNote = notes.filter(item.id != req.params.id);
-    notes = trashNote;
+    const trashNote = notesData.filter(item.id != req.params.id);
+    notesData = trashNote;
+})
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './develop/db/db.json'))
 })
 
 // server port
