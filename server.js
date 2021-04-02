@@ -47,11 +47,6 @@ app.post("/createNote", function(req, res){
     res.json(notebook);
 })
 
-app.post("/deleteNote/:id", (req, res) => {
-    const trashNote = notesData.filter(item.id != req.params.id);
-    notesData = trashNote;
-})
-
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './develop/db/db.json'))
 })
