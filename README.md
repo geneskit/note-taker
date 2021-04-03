@@ -20,7 +20,7 @@ GIVEN a note-taking application
 - HTML
 - CSS
 - JavaScript
-- Bootstrap
+
 
 ## Available Link(s)
 - [Deployed GitHub Link](https://geneskit.github.io/note-taker/)
